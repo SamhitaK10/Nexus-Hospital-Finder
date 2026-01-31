@@ -32,7 +32,12 @@ export function HospitalCard({ hospital, onClick }: HospitalCardProps) {
 
       <div className="flex items-center gap-1 text-sm text-gray-600 mb-3">
         <MapPin className="w-4 h-4 flex-shrink-0" />
-        <span>{hospital.distance} mi • {hospital.travelTime} min drive</span>
+        <span>
+          {hospital.distance !== undefined && hospital.travelTime !== undefined
+            ? `${hospital.distance} mi • ${hospital.travelTime} min drive`
+            : `${hospital.address.city}, ${hospital.address.state}`
+          }
+        </span>
       </div>
 
       <div className="grid grid-cols-2 gap-2 mb-3 text-sm">
