@@ -5,6 +5,7 @@ import { HospitalCard } from '@/app/components/HospitalCard';
 import { HospitalDetailModal } from '@/app/components/HospitalDetailModal';
 import { FilterDialog } from '@/app/components/FilterDialog';
 import { AIChat } from '@/app/components/AIChat';
+import { GoogleMapComponent } from '@/app/components/GoogleMap';
 import { Button } from '@/app/components/ui/button';
 import { Input } from '@/app/components/ui/input';
 
@@ -168,64 +169,16 @@ useEffect(() => {
           </div>
 
           {/* Map Area */}
-          <div className="hidden md:flex flex-1 bg-gradient-to-br from-gray-100 to-gray-200 relative">
-            {/* Map Grid Background */}
-            <div className="absolute inset-0" style={{
-              backgroundImage: 'linear-gradient(#d1d5db 1px, transparent 1px), linear-gradient(90deg, #d1d5db 1px, transparent 1px)',
-              backgroundSize: '40px 40px'
-            }}></div>
-
-            {/* Hospital Markers */}
-            {filteredHospitals.map((hospital, index) => {
-              const status = getAvailabilityStatus(hospital);
-              const color = getAvailabilityColor(status);
-              
-              // Position markers based on coordinates (simplified)
-              const top = 20 + (index * 15) % 60;
-              const left = 20 + (index * 25) % 70;
-
-              return (
-                <div
-                  key={hospital.id}
-                  className="absolute cursor-pointer transition-transform hover:scale-110"
-                  style={{ top: `${top}%`, left: `${left}%` }}
-                  onClick={() => onSelectHospital(hospital)}
-                >
-                  <div className={`w-12 h-12 bg-${color}-500 border-4 border-white rounded-full shadow-lg flex items-center justify-center ${
-                    selectedHospital?.id === hospital.id ? 'ring-4 ring-blue-500' : ''
-                  }`}>
-                    <MapPin className="w-6 h-6 text-white" />
-                  </div>
-                  <div className="absolute -top-10 left-1/2 transform -translate-x-1/2 bg-white border-2 border-gray-300 rounded px-2 py-1 whitespace-nowrap text-xs shadow-lg">
-                    {hospital.name.split(' ').slice(0, 2).join(' ')}
-                  </div>
-                </div>
-              );
-            })}
-
-            {/* User Location */}
-            <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-              <div className="w-6 h-6 bg-blue-600 border-4 border-white rounded-full shadow-lg animate-pulse"></div>
-              <div className="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-blue-600 text-white rounded px-2 py-1 text-xs whitespace-nowrap">
-                Your Location
-              </div>
-            </div>
-
-            {/* Map Controls */}
-            <div className="absolute bottom-8 right-8 space-y-2">
-              <Button size="icon" variant="secondary" className="w-12 h-12 shadow-lg">
-                <span className="text-xl">+</span>
-              </Button>
-              <Button size="icon" variant="secondary" className="w-12 h-12 shadow-lg">
-                <span className="text-xl">−</span>
-              </Button>
-              <Button size="icon" variant="secondary" className="w-12 h-12 shadow-lg">
-                <Navigation className="w-5 h-5" />
-              </Button>
-            </div>
-
+          <div className="hidden md:flex flex-1 relative">
+            <GoogleMapComponent
+              hospitals={filteredHospitals}
+              selectedHospital={selectedHospital}
+              onSelectHospital={onSelectHospital}
+              userLocation={userLocation}
+            />
+            
             {/* Legend */}
-            <div className="absolute bottom-8 left-8 bg-white border-2 border-gray-300 rounded-lg p-4 shadow-lg">
+            <div className="absolute bottom-8 left-8 bg-white border-2 border-gray-300 rounded-lg p-4 shadow-lg z-10">
               <h4 className="text-xs font-semibold mb-2">Availability</h4>
               <div className="space-y-1.5">
                 <div className="flex items-center gap-2 text-xs">
