@@ -1,4 +1,3 @@
-import { fetchHospitals } from './api';
 export interface Hospital {
   id: string;
   name: string;
@@ -392,7 +391,7 @@ export function getAvailabilityColor(
 
 // Function to get real hospitals from backend
 export async function getRealHospitals() {
-  const realHospitals = await fetchHospitals();
+  const realHospitals = await fetchRealHospitals();
   return realHospitals.length > 0 ? realHospitals : MOCK_HOSPITALS;
 }
 
