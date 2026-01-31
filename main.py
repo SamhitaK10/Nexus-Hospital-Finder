@@ -15,8 +15,12 @@ app.add_middleware(
 )
 
 # Load hospital data
-with open('../hospitals_data.json', 'r') as f:
-    hospitals = json.load(f)
+import os
+
+# Try to load from same directory
+json_path = 'hospitals_data.json' if os.path.exists('hospitals_data.json') else '../hospitals_data.json'
+
+with open(json_path, 'r') as f:
 
 @app.get("/")
 def root():
