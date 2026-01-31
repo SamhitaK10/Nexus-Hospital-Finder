@@ -1,0 +1,407 @@
+[
+  {
+    "id": 1,
+    "name": "ST ROSE HOSPITAL",
+    "address": "27200 CALAROGA AVE",
+    "city": "HAYWARD",
+    "state": "CA",
+    "zip": "94545",
+    "phone": "(510) 782-6200",
+    "lat": 34.09479215933565,
+    "lng": -117.49790680473996,
+    "beds": {
+      "er": 0,
+      "icu": 0,
+      "maternity": 6,
+      "pediatric": 5
+    },
+    "totalBeds": 336,
+    "availableBeds": 11,
+    "waitTime": 42,
+    "specialties": [
+      "General Medicine"
+    ],
+    "rating": 1,
+    "emergency_services": false,
+    "hospital_type": "Acute Care Hospitals",
+    "isOpen24Hours": true
+  },
+  {
+    "id": 2,
+    "name": "PROVIDENCE ST JOSEPH HOSPITAL",
+    "address": "2700 DOLBEER ST",
+    "city": "EUREKA",
+    "state": "CA",
+    "zip": "95501",
+    "phone": "(707) 445-8121",
+    "lat": 33.26763650934097,
+    "lng": -117.9030057104498,
+    "beds": {
+      "er": 9,
+      "icu": 0,
+      "maternity": 3,
+      "pediatric": 4
+    },
+    "totalBeds": 255,
+    "availableBeds": 16,
+    "waitTime": 65,
+    "specialties": [
+      "Emergency Services"
+    ],
+    "rating": 3,
+    "emergency_services": true,
+    "hospital_type": "Acute Care Hospitals",
+    "isOpen24Hours": true
+  },
+  {
+    "id": 3,
+    "name": "PENINSULA MEDICAL CENTER",
+    "address": "1501 TROUSDALE DRIVE",
+    "city": "BURLINGAME",
+    "state": "CA",
+    "zip": "94010",
+    "phone": "(650) 696-5400",
+    "lat": 33.87602358140554,
+    "lng": -118.74607229226731,
+    "beds": {
+      "er": 2,
+      "icu": 0,
+      "maternity": 3,
+      "pediatric": 6
+    },
+    "totalBeds": 346,
+    "availableBeds": 11,
+    "waitTime": 49,
+    "specialties": [
+      "Emergency Services"
+    ],
+    "rating": 5,
+    "emergency_services": true,
+    "hospital_type": "Acute Care Hospitals",
+    "isOpen24Hours": true
+  },
+  {
+    "id": 4,
+    "name": "CALIFORNIA PACIFIC MEDICAL CTR-DAVIES CAMPUS HOSP",
+    "address": "601 DUBOCE AVENUE",
+    "city": "SAN FRANCISCO",
+    "state": "CA",
+    "zip": "94117",
+    "phone": "(415) 600-6000",
+    "lat": 34.39572467535919,
+    "lng": -118.29438050993025,
+    "beds": {
+      "er": 6,
+      "icu": 5,
+      "maternity": 0,
+      "pediatric": 0
+    },
+    "totalBeds": 180,
+    "availableBeds": 11,
+    "waitTime": 100,
+    "specialties": [
+      "General Medicine"
+    ],
+    "rating": 3,
+    "emergency_services": false,
+    "hospital_type": "Acute Care Hospitals",
+    "isOpen24Hours": true
+  },
+  {
+    "id": 5,
+    "name": "PROVIDENCE QUEEN OF THE VALLEY MEDICAL CENTER",
+    "address": "1000 TRANCAS ST",
+    "city": "NAPA",
+    "state": "CA",
+    "zip": "94558",
+    "phone": "(707) 252-4411",
+    "lat": 34.2666234910158,
+    "lng": -119.15103021219049,
+    "beds": {
+      "er": 9,
+      "icu": 4,
+      "maternity": 0,
+      "pediatric": 2
+    },
+    "totalBeds": 274,
+    "availableBeds": 15,
+    "waitTime": 64,
+    "specialties": [
+      "Emergency Services"
+    ],
+    "rating": 4,
+    "emergency_services": true,
+    "hospital_type": "Acute Care Hospitals",
+    "isOpen24Hours": true
+  },
+  {
+    "id": 6,
+    "name": "ADVENTIST HEALTH ST HELENA",
+    "address": "10 WOODLAND ROAD",
+    "city": "SAINT HELENA",
+    "state": "CA",
+    "zip": "94574",
+    "phone": "(707) 963-3611",
+    "lat": 35.01776327025629,
+    "lng": -117.49547925940749,
+    "beds": {
+      "er": 2,
+      "icu": 5,
+      "maternity": 4,
+      "pediatric": 0
+    },
+    "totalBeds": 338,
+    "availableBeds": 11,
+    "waitTime": 15,
+    "specialties": [
+      "General Medicine"
+    ],
+    "rating": 4,
+    "emergency_services": false,
+    "hospital_type": "Acute Care Hospitals",
+    "isOpen24Hours": true
+  },
+  {
+    "id": 7,
+    "name": "SUTTER AMADOR HOSPITAL",
+    "address": "200 MISSION BLVD",
+    "city": "JACKSON",
+    "state": "CA",
+    "zip": "95642",
+    "phone": "(209) 223-7500",
+    "lat": 33.52632553620138,
+    "lng": -118.48679199317466,
+    "beds": {
+      "er": 7,
+      "icu": 1,
+      "maternity": 4,
+      "pediatric": 3
+    },
+    "totalBeds": 151,
+    "availableBeds": 15,
+    "waitTime": 178,
+    "specialties": [
+      "Emergency Services"
+    ],
+    "rating": 4,
+    "emergency_services": true,
+    "hospital_type": "Acute Care Hospitals",
+    "isOpen24Hours": true
+  },
+  {
+    "id": 8,
+    "name": "MERCY GENERAL HOSPITAL",
+    "address": "4001 J ST",
+    "city": "SACRAMENTO",
+    "state": "CA",
+    "zip": "95819",
+    "phone": "(916) 453-4453",
+    "lat": 35.050263480556765,
+    "lng": -117.92151493531003,
+    "beds": {
+      "er": 6,
+      "icu": 0,
+      "maternity": 5,
+      "pediatric": 6
+    },
+    "totalBeds": 366,
+    "availableBeds": 17,
+    "waitTime": 15,
+    "specialties": [
+      "Emergency Services"
+    ],
+    "rating": 4,
+    "emergency_services": true,
+    "hospital_type": "Acute Care Hospitals",
+    "isOpen24Hours": true
+  },
+  {
+    "id": 9,
+    "name": "RIVERSIDE COMMUNITY HOSPITAL",
+    "address": "4445 MAGNOLIA AVENUE",
+    "city": "RIVERSIDE",
+    "state": "CA",
+    "zip": "92501",
+    "phone": "(951) 788-3000",
+    "lat": 34.34586049975208,
+    "lng": -118.63684520210921,
+    "beds": {
+      "er": 4,
+      "icu": 2,
+      "maternity": 2,
+      "pediatric": 1
+    },
+    "totalBeds": 338,
+    "availableBeds": 9,
+    "waitTime": 26,
+    "specialties": [
+      "Emergency Services"
+    ],
+    "rating": 3,
+    "emergency_services": true,
+    "hospital_type": "Acute Care Hospitals",
+    "isOpen24Hours": true
+  },
+  {
+    "id": 10,
+    "name": "PARADISE VALLEY HOSPITAL",
+    "address": "2400 EAST 4TH ST",
+    "city": "NATIONAL CITY",
+    "state": "CA",
+    "zip": "91950",
+    "phone": "(619) 470-4321",
+    "lat": 34.43645450719319,
+    "lng": -117.36706810438956,
+    "beds": {
+      "er": 7,
+      "icu": 3,
+      "maternity": 2,
+      "pediatric": 5
+    },
+    "totalBeds": 175,
+    "availableBeds": 17,
+    "waitTime": 166,
+    "specialties": [
+      "Emergency Services"
+    ],
+    "rating": 3,
+    "emergency_services": true,
+    "hospital_type": "Acute Care Hospitals",
+    "isOpen24Hours": true
+  },
+  {
+    "id": 11,
+    "name": "UC SAN DIEGO HEALTH HILLCREST - HILLCREST MED CTR",
+    "address": "200 WEST ARBOR DRIVE",
+    "city": "SAN DIEGO",
+    "state": "CA",
+    "zip": "92103",
+    "phone": "(619) 543-6222",
+    "lat": 34.781156266238064,
+    "lng": -117.4529509054142,
+    "beds": {
+      "er": 8,
+      "icu": 4,
+      "maternity": 5,
+      "pediatric": 3
+    },
+    "totalBeds": 130,
+    "availableBeds": 20,
+    "waitTime": 125,
+    "specialties": [
+      "Emergency Services"
+    ],
+    "rating": 5,
+    "emergency_services": true,
+    "hospital_type": "Acute Care Hospitals",
+    "isOpen24Hours": true
+  },
+  {
+    "id": 12,
+    "name": "GROSSMONT HOSPITAL",
+    "address": "5555 GROSSMONT CENTER DRIVE BOX 58",
+    "city": "LA MESA",
+    "state": "CA",
+    "zip": "91942",
+    "phone": "(619) 465-0711",
+    "lat": 34.820444150445965,
+    "lng": -118.75478888192838,
+    "beds": {
+      "er": 6,
+      "icu": 4,
+      "maternity": 5,
+      "pediatric": 1
+    },
+    "totalBeds": 375,
+    "availableBeds": 16,
+    "waitTime": 78,
+    "specialties": [
+      "Emergency Services"
+    ],
+    "rating": 3,
+    "emergency_services": true,
+    "hospital_type": "Acute Care Hospitals",
+    "isOpen24Hours": true
+  },
+  {
+    "id": 13,
+    "name": "MAD RIVER COMMUNITY HOSPITAL",
+    "address": "3800 JANES RD",
+    "city": "ARCATA",
+    "state": "CA",
+    "zip": "95521",
+    "phone": "(707) 822-3621",
+    "lat": 34.2659128365767,
+    "lng": -118.32208263204686,
+    "beds": {
+      "er": 3,
+      "icu": 3,
+      "maternity": 5,
+      "pediatric": 1
+    },
+    "totalBeds": 184,
+    "availableBeds": 12,
+    "waitTime": 81,
+    "specialties": [
+      "Emergency Services"
+    ],
+    "rating": 3,
+    "emergency_services": true,
+    "hospital_type": "Acute Care Hospitals",
+    "isOpen24Hours": true
+  },
+  {
+    "id": 14,
+    "name": "OROVILLE HOSPITAL",
+    "address": "2767 OLIVE HIGHWAY",
+    "city": "OROVILLE",
+    "state": "CA",
+    "zip": "95966",
+    "phone": "(530) 533-8500",
+    "lat": 33.23664916615025,
+    "lng": -118.3203944582082,
+    "beds": {
+      "er": 3,
+      "icu": 2,
+      "maternity": 5,
+      "pediatric": 1
+    },
+    "totalBeds": 108,
+    "availableBeds": 11,
+    "waitTime": 133,
+    "specialties": [
+      "Emergency Services"
+    ],
+    "rating": 1,
+    "emergency_services": true,
+    "hospital_type": "Acute Care Hospitals",
+    "isOpen24Hours": true
+  },
+  {
+    "id": 15,
+    "name": "BAKERSFIELD MEMORIAL HOSPITAL",
+    "address": "420 34TH ST",
+    "city": "BAKERSFIELD",
+    "state": "CA",
+    "zip": "93301",
+    "phone": "(661) 327-1792",
+    "lat": 33.584829315026326,
+    "lng": -118.68509765238339,
+    "beds": {
+      "er": 9,
+      "icu": 0,
+      "maternity": 6,
+      "pediatric": 6
+    },
+    "totalBeds": 100,
+    "availableBeds": 21,
+    "waitTime": 106,
+    "specialties": [
+      "Emergency Services"
+    ],
+    "rating": 2,
+    "emergency_services": true,
+    "hospital_type": "Acute Care Hospitals",
+    "isOpen24Hours": true
+  }
+]
