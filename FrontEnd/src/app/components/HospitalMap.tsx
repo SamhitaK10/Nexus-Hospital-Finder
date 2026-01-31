@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { MapPin, Navigation, Filter, Search, MessageSquare, Menu, X, FileText } from 'lucide-react';
-import { MOCK_HOSPITALS, Hospital, getAvailabilityStatus, getAvailabilityColor } from '@/app/data/hospitalData';
+import { MOCK_HOSPITALS, Hospital, getAvailabilityStatus, getAvailabilityColor, fetchRealHospitals } from '@/app/data/hospitalData';
 import { HospitalCard } from '@/app/components/HospitalCard';
 import { HospitalDetailModal } from '@/app/components/HospitalDetailModal';
 import { FilterDialog } from '@/app/components/FilterDialog';
@@ -16,6 +16,15 @@ interface HospitalMapProps {
 
 export function HospitalMap({ selectedHospital, onSelectHospital, onShowPRD }: HospitalMapProps) {
   const [hospitals, setHospitals] = useState<Hospital[]>(MOCK_HOSPITALS);
+// Load real hospitals from backend
+useEffect(() => {
+  fetchRealHospitals().then(realHospitals => {
+    if (realHospitals.length > 0) {
+      setHospitals(realHospitals);
+      setFilteredHospitals(realHospitals);
+    }
+  });
+}, []);
   const [filteredHospitals, setFilteredHospitals] = useState<Hospital[]>(MOCK_HOSPITALS);
   const [showFilters, setShowFilters] = useState(false);
   const [showChat, setShowChat] = useState(false);
