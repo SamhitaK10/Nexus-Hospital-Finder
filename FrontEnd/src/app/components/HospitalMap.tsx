@@ -1,12 +1,16 @@
 import { useState, useEffect } from 'react';
 import { MapPin, Navigation, Filter, Search, MessageSquare, Menu, X, FileText } from 'lucide-react';
-import { MOCK_HOSPITALS, Hospital, getAvailabilityStatus, getAvailabilityColor } from '@/app/data/hospitalData';
+import { MOCK_HOSPITALS, Hospital, getAvailabilityStatus, getAvailabilityColor, fetchRealHospitals } from '@/app/data/hospitalData';
 import { HospitalCard } from '@/app/components/HospitalCard';
 import { HospitalDetailModal } from '@/app/components/HospitalDetailModal';
 import { FilterDialog } from '@/app/components/FilterDialog';
 import { AIChat } from '@/app/components/AIChat';
+import { GoogleMapComponent } from '@/app/components/GoogleMap';
 import { Button } from '@/app/components/ui/button';
 import { Input } from '@/app/components/ui/input';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/app/components/ui/dialog';
+import { calculateDistance, estimateTravelTime, requestUserLocation } from '@/app/utils/geolocation';
+import { geocodeAddress } from '@/app/utils/geocoding';
 
 interface HospitalMapProps {
   selectedHospital: Hospital | null;
@@ -21,7 +25,90 @@ export function HospitalMap({ selectedHospital, onSelectHospital, onShowPRD }: H
   const [showChat, setShowChat] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [activeFilters, setActiveFilters] = useState<string[]>([]);
-  const [userLocation] = useState({ lat: 37.7749, lng: -122.4194 }); // San Francisco
+  const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>(null);
+  const [showLocationDialog, setShowLocationDialog] = useState(false);
+  const [locationError, setLocationError] = useState<string | null>(null);
+  const [isRequestingLocation, setIsRequestingLocation] = useState(false);
+  const [locationSearchQuery, setLocationSearchQuery] = useState('');
+  const [isGeocoding, setIsGeocoding] = useState(false);
+  const [locationSearchError, setLocationSearchError] = useState<string | null>(null);
+  const [customLocationName, setCustomLocationName] = useState<string | null>(null);
+
+  // Load real hospitals from backend
+  useEffect(() => {
+    fetchRealHospitals().then(realHospitals => {
+      if (realHospitals.length > 0) {
+        setHospitals(realHospitals);
+        setFilteredHospitals(realHospitals);
+      }
+    });
+  }, []);
+
+  // Request user location on mount
+  useEffect(() => {
+    // Check if location was previously denied
+    const locationDenied = localStorage.getItem('locationDenied') === 'true';
+    if (!locationDenied) {
+      setShowLocationDialog(true);
+    }
+  }, []);
+
+  const handleRequestLocation = async () => {
+    setIsRequestingLocation(true);
+    setLocationError(null);
+    
+    try {
+      const location = await requestUserLocation();
+      setUserLocation(location);
+      setShowLocationDialog(false);
+      localStorage.removeItem('locationDenied');
+    } catch (error: any) {
+      console.error('Error getting location:', error);
+      setLocationError(
+        error.code === 1
+          ? 'Location access was denied. You can still use the map, but hospitals won\'t be sorted by distance.'
+          : 'Unable to get your location. Please check your browser settings.'
+      );
+      if (error.code === 1) {
+        localStorage.setItem('locationDenied', 'true');
+      }
+    } finally {
+      setIsRequestingLocation(false);
+    }
+  };
+
+  const handleSkipLocation = () => {
+    setShowLocationDialog(false);
+    localStorage.setItem('locationDenied', 'true');
+  };
+
+  const handleLocationSearch = async () => {
+    if (!locationSearchQuery.trim()) {
+      setLocationSearchError('Please enter an address, city, or zip code');
+      return;
+    }
+
+    setIsGeocoding(true);
+    setLocationSearchError(null);
+
+    try {
+      const apiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
+      if (!apiKey) {
+        throw new Error('Google Maps API key is not configured');
+      }
+
+      const result = await geocodeAddress(locationSearchQuery, apiKey);
+      setUserLocation({ lat: result.lat, lng: result.lng });
+      setCustomLocationName(result.formattedAddress);
+      setLocationSearchQuery('');
+      localStorage.removeItem('locationDenied');
+    } catch (error: any) {
+      console.error('Geocoding error:', error);
+      setLocationSearchError(error.message || 'Failed to find location. Please try a different address.');
+    } finally {
+      setIsGeocoding(false);
+    }
+  };
 
   // Simulate real-time updates
   useEffect(() => {
@@ -44,19 +131,41 @@ export function HospitalMap({ selectedHospital, onSelectHospital, onShowPRD }: H
     return () => clearInterval(interval);
   }, []);
 
-  // Apply search and filters
+  // Calculate distances and sort hospitals when user location is available
   useEffect(() => {
-    let filtered = hospitals;
+    let processed = hospitals.map(hospital => {
+      if (userLocation) {
+        const distance = calculateDistance(
+          userLocation.lat,
+          userLocation.lng,
+          hospital.address.coordinates.lat,
+          hospital.address.coordinates.lng
+        );
+        const travelTime = estimateTravelTime(distance);
+        return {
+          ...hospital,
+          distance,
+          travelTime,
+        };
+      }
+      return hospital;
+    });
 
+    // Sort by distance if user location is available
+    if (userLocation) {
+      processed.sort((a, b) => (a.distance || Infinity) - (b.distance || Infinity));
+    }
+
+    // Apply search filter
     if (searchQuery) {
-      filtered = filtered.filter(h => 
+      processed = processed.filter(h => 
         h.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
         h.address.city.toLowerCase().includes(searchQuery.toLowerCase())
       );
     }
 
-    setFilteredHospitals(filtered);
-  }, [searchQuery, hospitals, activeFilters]);
+    setFilteredHospitals(processed);
+  }, [searchQuery, hospitals, activeFilters, userLocation]);
 
   return (
     <>
@@ -100,11 +209,74 @@ export function HospitalMap({ selectedHospital, onSelectHospital, onShowPRD }: H
           <div className="w-full md:w-96 bg-white border-r border-gray-200 flex flex-col">
             {/* Search and Filter Bar */}
             <div className="p-4 border-b border-gray-200 space-y-3">
+              {/* Location Search - Show when user has skipped location */}
+              {!userLocation && (
+                <div className="space-y-2">
+                  <div className="relative">
+                    <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-blue-500" />
+                    <Input
+                      type="text"
+                      placeholder="Enter address, city, zip code, or hospital name..."
+                      value={locationSearchQuery}
+                      onChange={(e) => {
+                        setLocationSearchQuery(e.target.value);
+                        setLocationSearchError(null);
+                      }}
+                      onKeyPress={(e) => {
+                        if (e.key === 'Enter') {
+                          handleLocationSearch();
+                        }
+                      }}
+                      className="pl-10 pr-20"
+                    />
+                    <Button
+                      size="sm"
+                      onClick={handleLocationSearch}
+                      disabled={isGeocoding || !locationSearchQuery.trim()}
+                      className="absolute right-1 top-1/2 -translate-y-1/2 h-7 px-3 text-xs"
+                    >
+                      {isGeocoding ? (
+                        <div className="animate-spin rounded-full h-3 w-3 border-b-2 border-white"></div>
+                      ) : (
+                        'Search'
+                      )}
+                    </Button>
+                  </div>
+                  {locationSearchError && (
+                    <p className="text-xs text-red-600 flex items-center gap-1">
+                      <X className="w-3 h-3" />
+                      {locationSearchError}
+                    </p>
+                  )}
+                  {customLocationName && (
+                    <div className="flex items-center justify-between bg-green-50 border border-green-200 rounded px-2 py-1">
+                      <p className="text-xs text-green-700 flex items-center gap-1">
+                        <MapPin className="w-3 h-3" />
+                        {customLocationName}
+                      </p>
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        onClick={() => {
+                          setUserLocation(null);
+                          setCustomLocationName(null);
+                          setLocationSearchQuery('');
+                        }}
+                        className="h-5 w-5 p-0 text-green-700 hover:text-green-900"
+                      >
+                        <X className="w-3 h-3" />
+                      </Button>
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {/* Hospital Name Search */}
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
                 <Input
                   type="text"
-                  placeholder="Search hospitals or location..."
+                  placeholder={userLocation ? "Search hospitals..." : "Search hospitals by name..."}
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   className="pl-10"
@@ -144,7 +316,7 @@ export function HospitalMap({ selectedHospital, onSelectHospital, onShowPRD }: H
                   {filteredHospitals.length} Hospitals Found
                 </h2>
                 <div className="text-xs text-gray-500">
-                  Sorted by distance
+                  {userLocation ? 'Sorted by distance' : 'All hospitals'}
                 </div>
               </div>
 
@@ -159,64 +331,45 @@ export function HospitalMap({ selectedHospital, onSelectHospital, onShowPRD }: H
           </div>
 
           {/* Map Area */}
-          <div className="hidden md:flex flex-1 bg-gradient-to-br from-gray-100 to-gray-200 relative">
-            {/* Map Grid Background */}
-            <div className="absolute inset-0" style={{
-              backgroundImage: 'linear-gradient(#d1d5db 1px, transparent 1px), linear-gradient(90deg, #d1d5db 1px, transparent 1px)',
-              backgroundSize: '40px 40px'
-            }}></div>
-
-            {/* Hospital Markers */}
-            {filteredHospitals.map((hospital, index) => {
-              const status = getAvailabilityStatus(hospital);
-              const color = getAvailabilityColor(status);
-              
-              // Position markers based on coordinates (simplified)
-              const top = 20 + (index * 15) % 60;
-              const left = 20 + (index * 25) % 70;
-
-              return (
-                <div
-                  key={hospital.id}
-                  className="absolute cursor-pointer transition-transform hover:scale-110"
-                  style={{ top: `${top}%`, left: `${left}%` }}
-                  onClick={() => onSelectHospital(hospital)}
+          <div className="hidden md:flex flex-1 relative">
+            <GoogleMapComponent
+              hospitals={filteredHospitals}
+              selectedHospital={selectedHospital}
+              onSelectHospital={onSelectHospital}
+              userLocation={userLocation || undefined}
+            />
+            
+            {/* Location Controls */}
+            <div className="absolute top-4 right-4 z-10 flex gap-2">
+              {userLocation && (
+                <Button
+                  size="sm"
+                  onClick={() => {
+                    setUserLocation(null);
+                    setCustomLocationName(null);
+                    setLocationSearchQuery('');
+                  }}
+                  variant="outline"
+                  className="bg-white hover:bg-gray-50 text-gray-700 shadow-lg border border-gray-300"
                 >
-                  <div className={`w-12 h-12 bg-${color}-500 border-4 border-white rounded-full shadow-lg flex items-center justify-center ${
-                    selectedHospital?.id === hospital.id ? 'ring-4 ring-blue-500' : ''
-                  }`}>
-                    <MapPin className="w-6 h-6 text-white" />
-                  </div>
-                  <div className="absolute -top-10 left-1/2 transform -translate-x-1/2 bg-white border-2 border-gray-300 rounded px-2 py-1 whitespace-nowrap text-xs shadow-lg">
-                    {hospital.name.split(' ').slice(0, 2).join(' ')}
-                  </div>
-                </div>
-              );
-            })}
-
-            {/* User Location */}
-            <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-              <div className="w-6 h-6 bg-blue-600 border-4 border-white rounded-full shadow-lg animate-pulse"></div>
-              <div className="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-blue-600 text-white rounded px-2 py-1 text-xs whitespace-nowrap">
-                Your Location
-              </div>
+                  <X className="w-4 h-4 mr-2" />
+                  Clear Location
+                </Button>
+              )}
+              {!userLocation && (
+                <Button
+                  size="sm"
+                  onClick={() => setShowLocationDialog(true)}
+                  className="bg-white hover:bg-gray-50 text-gray-700 shadow-lg border border-gray-300"
+                >
+                  <Navigation className="w-4 h-4 mr-2" />
+                  Use My Location
+                </Button>
+              )}
             </div>
-
-            {/* Map Controls */}
-            <div className="absolute bottom-8 right-8 space-y-2">
-              <Button size="icon" variant="secondary" className="w-12 h-12 shadow-lg">
-                <span className="text-xl">+</span>
-              </Button>
-              <Button size="icon" variant="secondary" className="w-12 h-12 shadow-lg">
-                <span className="text-xl">−</span>
-              </Button>
-              <Button size="icon" variant="secondary" className="w-12 h-12 shadow-lg">
-                <Navigation className="w-5 h-5" />
-              </Button>
-            </div>
-
+            
             {/* Legend */}
-            <div className="absolute bottom-8 left-8 bg-white border-2 border-gray-300 rounded-lg p-4 shadow-lg">
+            <div className="absolute bottom-8 left-8 bg-white border-2 border-gray-300 rounded-lg p-4 shadow-lg z-10">
               <h4 className="text-xs font-semibold mb-2">Availability</h4>
               <div className="space-y-1.5">
                 <div className="flex items-center gap-2 text-xs">
@@ -266,6 +419,60 @@ export function HospitalMap({ selectedHospital, onSelectHospital, onShowPRD }: H
           hospitals={hospitals}
         />
       )}
+
+      {/* Location Permission Dialog */}
+      <Dialog open={showLocationDialog} onOpenChange={setShowLocationDialog}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <Navigation className="w-5 h-5 text-blue-600" />
+              Enable Location Services
+            </DialogTitle>
+            <DialogDescription>
+              We'd like to use your location to show you the nearest hospitals and help you find the best care quickly.
+            </DialogDescription>
+          </DialogHeader>
+          
+          <div className="py-4">
+            <p className="text-sm text-gray-600 mb-4">
+              Your location will be used to:
+            </p>
+            <ul className="list-disc list-inside space-y-2 text-sm text-gray-600">
+              <li>Sort hospitals by distance from you</li>
+              <li>Show your location on the map</li>
+              <li>Calculate travel times to each hospital</li>
+            </ul>
+            {locationError && (
+              <div className="mt-4 p-3 bg-red-50 border border-red-200 rounded text-sm text-red-700">
+                {locationError}
+              </div>
+            )}
+          </div>
+
+          <DialogFooter>
+            <Button variant="outline" onClick={handleSkipLocation}>
+              Skip
+            </Button>
+            <Button 
+              onClick={handleRequestLocation}
+              disabled={isRequestingLocation}
+              className="bg-blue-600 hover:bg-blue-700"
+            >
+              {isRequestingLocation ? (
+                <>
+                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                  Getting location...
+                </>
+              ) : (
+                <>
+                  <Navigation className="w-4 h-4 mr-2" />
+                  Allow Location
+                </>
+              )}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </>
   );
 }
