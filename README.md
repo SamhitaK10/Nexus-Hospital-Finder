@@ -7,7 +7,7 @@ A multi-agent AI system that provides real-time hospital bed availability across
 
 ## 🖼 Demo Preview
 
-<img width="1918" height="996" alt="image" src="https://github.com/user-attachments/assets/6a4fb191-d176-4e70-9a68-507e726e3173" />
+<img width="1000" height="996" alt="image" src="https://github.com/user-attachments/assets/6a4fb191-d176-4e70-9a68-507e726e3173" />
 
 *Interactive map showing real-time bed availability across all 50 states with color-coded markers (green: high availability, yellow: medium, red: low)*
 
