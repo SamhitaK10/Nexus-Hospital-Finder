@@ -398,7 +398,7 @@ export async function getRealHospitals() {
 // Export function to fetch from backend
 export async function fetchRealHospitals(): Promise<Hospital[]> {
   try {
-    const response = await fetch('http://localhost:8000/api/hospitals');
+    const response = await fetch(`${import.meta.env.VITE_API_URL}/api/hospitals`);
     const data = await response.json();
     
     return data.hospitals.map((h: any) => ({
