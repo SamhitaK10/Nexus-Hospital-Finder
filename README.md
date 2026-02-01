@@ -6,19 +6,10 @@ A multi-agent AI system that provides real-time hospital bed availability across
 [YOUR_DEPLOYMENT_URL]
 
 ## 🖼 Demo Preview
-<p align="center">
-  <img src="https://github.com/user-attachments/assets/6a4fb191-d176-4e70-9a68-507e726e3173" width="700"/>
-</p>
-
-<p align="center"><em>Interactive map showing real-time bed availability across all 50 states with color-coded markers</em></p>
-
-<br/>
-
-<p align="center">
-  <img src="https://github.com/user-attachments/assets/777a3597-16be-40b3-8c57-cb503053f43c" width="700"/>
-</p>
-
-<p align="center"><em>AI recommendation interface showing hospital selection with reasoning</em></p>
+<img width="959" height="498" alt="11015bf8-a13f-4d56-bc3e-544b588519f5" src="https://github.com/user-attachments/assets/63ee4a01-958f-4417-bcb5-22f14389570c" />
+* Interactive map showing real-time bed availability across all 50 states with color-coded markers (green: high availability, yellow: medium, red: low)
+* 
+<img width="308" height="492" alt="image" src="https://github.com/user-attachments/assets/834e09bb-d023-4c58-bab3-e9fad6f9384f" />
 
 
 *AI assistant analyzing "chest pain" and recommending Russell County Hospital with reasoning: urgent situation, 3 ER beds available, undefined distance*
