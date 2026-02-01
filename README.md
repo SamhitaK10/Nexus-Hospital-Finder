@@ -13,17 +13,6 @@ A multi-agent AI system that provides real-time hospital bed availability across
   <em>Interactive map showing real-time bed availability across all 50 states with color-coded markers (green: high availability, yellow: medium, red: low)</em>
 </p>
 
-<br/>
-
-<p align="center">
-  <img src="https://github.com/user-attachments/assets/834e09bb-d023-4c58-bab3-e9fad6f9384f" width="300" />
-</p>
-
-<p align="center">
-  <em>AI assistant analyzing "chest pain" and recommending Russell County Hospital with reasoning, urgent situation, and ER bed availability</em>
-</p>
-
-
 ## 🖼 Demo Overview
 
 Type your symptoms to receive instant recommendations including hospital name with availability status (HIGH/MEDIUM/LOW), real-time bed counts (ER, ICU, Pediatric, Maternity), estimated wait time in minutes, driving distance and time, detailed reasoning for recommendation, alternative hospital options. Example interaction shown: User inputs "chest pain" and receives recommendation for Russell County Hospital marked as "BEST MATCH" with medium availability, 3 ER beds available, plus two backup options (Providence St Joseph Hospital with 2 ER beds, Northern Light Mercy Hospital with 4 ER beds). System provides critical safety note: "Given the urgent nature, please call 911 if symptoms worsen during travel."
